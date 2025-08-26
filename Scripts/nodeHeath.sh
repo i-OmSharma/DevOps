@@ -11,6 +11,10 @@
 #########################
 
 set -x # debug mode 
+set -e # exit the script when there is an error
+set -o pipefail
+
+# set -exo pipefail
 
 # echo "disk usage"
 df -h
@@ -20,3 +24,6 @@ free -g
 
 # echo "no of cpu"
 nproc
+
+ps -ef | grep bluetooth | awk -F" " '{print $2}'
+
