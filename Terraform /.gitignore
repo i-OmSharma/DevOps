@@ -1,0 +1,13 @@
+#Teraform 
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+
+#Secret
+*.pem
+tera-key
+tera-key.pub
+
+# OS / Editor
+.vscode/
+.DS_Store
