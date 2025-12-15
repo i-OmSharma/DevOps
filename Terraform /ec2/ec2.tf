@@ -1,0 +1,89 @@
+# key pair
+
+
+resource "aws_key_pair" "my_key" {
+  key_name = "tera-key"
+  public_key = file("tera-key.pub")
+}
+
+# VPS & Security group
+
+resource "aws_default_vpc" "default" {
+  
+}
+
+
+
+resource "aws_security_group" "my_sec_group" {
+    name = "automate_secGroup"
+    description = "This will add a TF generate Security Group"
+    vpc_id = aws_default_vpc.default.id # interpolation 
+
+
+    # inbound rules
+    ingress{
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "SSH open"
+    }
+
+    ingress{
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "HTTP open"
+    }
+
+    ingress{
+        from_port = 8000
+        to_port = 8000
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Custom port open"
+    }
+
+
+    # Outbound rules
+    egress{ 
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "All access open"
+    }
+
+    tags = {
+        Name = "automate_secGroup"
+    }
+  
+}
+
+# ec2
+
+resource "aws_instance" "my_instance" {
+   key_name = aws_key_pair.my_key.key_name
+   security_groups = [aws_security_group.my_sec_group.name]
+   instance_type = "t2.micro"
+   ami = "ami-02b8269d5e85954ef" #ubuntu
+
+   root_block_device {
+     volume_size = 8
+     volume_type = "gp3"
+   }
+
+   tags = {
+     Name = "IAC ec2"
+   }
+}
+
+
+output "ec2_public_ip" {
+  value = aws_instance.my_instance.public_ip
+}
+
+output "ec2_public_dns" {
+  value = aws_instance.my_instance.public_dns
+}
