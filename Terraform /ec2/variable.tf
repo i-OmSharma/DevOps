@@ -7,7 +7,3 @@ variable "aws_root_storage_size" {
   default = 8
   type = number
 }
-
-variable "ec2" {
-  
-}
