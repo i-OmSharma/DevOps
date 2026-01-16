@@ -26,6 +26,10 @@ spec:
           httpGet:
             path: /health
             port: 80
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
         
         resources: 
           requests:
