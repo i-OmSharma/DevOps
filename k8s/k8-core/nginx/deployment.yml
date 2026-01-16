@@ -21,6 +21,12 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+        
         resources: 
           requests:
             cpu: "100m"
